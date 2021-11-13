@@ -6,8 +6,10 @@ export default (question) => {
 
 		switch (Number(question.type)) {
 			case 4:
+			case 5:
 				for (const [index, value] of [...i.toString(JSON.parse(question.annotation).length).padStart(question.answers.length, '0')].entries())
 					variant.push({ 'answer_id': question.answers[index].id, 'answer': Number(value) + 1 })
+				console.log(variant)
 				break
 			case 6:
 				for (const [index, value] of [...i.toString(2).padStart(question.answers.length, '0')].entries())
