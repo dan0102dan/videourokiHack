@@ -1,7 +1,7 @@
 import { createTest, getOptions, getResults } from './functions/index.js'
 import axios from 'axios'
 
-const id = 8835278
+const id = 7170981
 const user = 'Антон Анатоль'
 const grade = '11'
 
@@ -13,7 +13,6 @@ async function main () {
 			if (question.answers.length) {
 				const variants = getOptions(question) // получаем все возможные варианты, как можно ответить
 				// console.log('Внимание, вопрос:', question)
-				console.log('Внимание, вопрос:', question.description, 'Варианты ответов:', question.answers)
 				for (const variant of variants) {
 					const test = await createTest(id, user, grade)
 					// console.log('Пробую', variant)
@@ -30,7 +29,7 @@ async function main () {
 
 					const result = await getResults(test.member.uuid)
 					if (result > 0) {
-						console.log('Правильный ответ:', variant)
+						console.log('Внимание, вопрос:', question.description, 'Варианты ответов:', question.answers,'Правильный ответ:', variant)
 						break
 					}
 				}
