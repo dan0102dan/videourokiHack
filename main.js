@@ -1,54 +1,44 @@
+import { createTest, getOptions, getResults } from './functions/index.js'
 import axios from 'axios'
-import cheerio from 'cheerio'
 
 const id = '7135182'
 const user = 'Антон Анатоль'
 const grade = '11'
 
-const { data: test } = await axios.post(
-	`https://videouroki.net/tests/api/beginTest/${id}/`,
-	{ "member": { "id": false, "firstname": user.split(' ')[0], "lastname": user.split(' ')[1], "classTxt": grade } }
-)
-if (test.errors) throw test // если прилетела ошибка
-console.log('тест создан', test.uuid)
+async function main () {
+	const test = await createTest(id, user, grade)
+	// console.log('Тест создан', test.member.uuid)
 
-let { data: fullTest } = await axios.post(`https://videouroki.net/tests/do/${test.uuid}/`)
-const $ = cheerio.load(fullTest)
-for (let i = 0; i < $('body > script').length; i++)
-	try {
-		fullTest = JSON.parse($('body > script').get()[i].children[0].data.replace('window.backend = ', ''))
-	}
-	catch {
-		// console.log('не то')
-	}
+	for (const question of JSON.parse(test.questions))
+		try {
+			if (question.answers.length) {
+				const variants = getOptions(question.answers) // получаем все возможные варианты, как можно ответить
+				console.log('Внимание, вопрос:', question.description, question.answers)
+				for (const variant of variants) {
+					const test = await createTest(id, user, grade)
+					// console.log('Пробую', variant)
+					await axios.post(
+						`https://videouroki.net/tests/api/save/${test.member.fakeId}/`,
+						{
+							'answer': {
+								'id': question.id,
+								'variants': variant.length > 1 ? variant : variant[0]
+							},
+							'member': test.member
+						}
+					)
 
-for (const question of JSON.parse(fullTest.questions))
-	try {
-		console.log('внимание, вопрос:', question.description, question.answers.length)
-		if (question.answers) {
-			const { data } = await axios.post(
-				`https://videouroki.net/tests/api/save/${fullTest.member.fakeId}/`,
-				{
-					"answer": {
-						"id": test.id,
-						"variants": question.answers.map(answer => (
-							{
-								answer_id: answer.id,
-								variants: 0
-							}
-						))
-					},
-					"member": fullTest.member
+					const result = await getResults(test.member.uuid)
+					if (result > 0) {
+						console.log('Правильный ответ:', variant)
+						break
+					}
 				}
-			)
-			console.log('ответ', data)
-
-			let { data: result } = await axios.get(
-				`https://videouroki.net/tests/complete/${test.uuid}/`
-			)
-			console.log('закончили', result)
+			}
 		}
-	}
-	catch (e) {
-		console.log(e)
-	}
+		catch (e) {
+			console.log(e)
+		}
+}
+
+main()
