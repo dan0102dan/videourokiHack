@@ -12,6 +12,7 @@ async function main () {
 		try {
 			if (question.answers.length) {
 				const variants = getOptions(question) // получаем все возможные варианты, как можно ответить
+				// console.log('Внимание, вопрос:', question)
 				console.log('Внимание, вопрос:', question.description, 'Варианты ответов:', question.answers)
 				for (const variant of variants) {
 					const test = await createTest(id, user, grade)
