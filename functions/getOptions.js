@@ -5,22 +5,36 @@ export default (question) => {
 		case 3:
 			console.log('Я пока не умею отвечать на вопросы письменно(')
 			break
-		// case 4:
-		// case 5:
-		// 	for (let i = 0; i < question.answers.length; i++) {
-		// 		const option = { variant: [], answer: [] }
+		case 4:
+			for (let variant = 1; variant <= Number(''.padStart(question.answers.length, JSON.parse(question.annotation).length.toString())); variant++)
+				if (variant.toString().length === question.answers.length && [...variant.toString()].every(e => Array.from({ length: JSON.parse(question.annotation).length }, (_, i) => i + 1).includes(Number(e)))) {
+					const option = { variant: [], answer: [] }
 
-		// 		for (let index = 0; index < JSON.parse(question.annotation).length; index++) {
-		// 			console.log(index)
-		// 			const answer = question.answers.at(index)
+					for (const [index, value] of [...variant.toString()].entries()) {
+						const answer = question.answers.at(index)
 
-		// 			option.variant.push({ 'answer_id': answer.id, 'answer': Number(i) + 1 })
-		// 			option.answer.push({ 'judgment': answer.text, 'answer': Number(i) + 1 })
-		// 		}
+						option.variant.push({ 'answer_id': answer.id, 'answer': Number(value) })
+						option.answer.push({ 'judgment': answer.text, 'answer': Number(value) })
+					}
 
-		// 		options.push(option)
-		// 	}
-		// 	break
+					options.push(option)
+				}
+			break
+		case 5:
+			for (let variant = 1; variant <= Number(''.padStart(question.answers.length, question.answers.length.toString())); variant++)
+				if (variant.toString().length === question.answers.length && ![...variant.toString()].some((e, i) => [...variant.toString()].indexOf(e) != i) && [...variant.toString()].every(e => Array.from({ length: question.answers.length }, (_, i) => i + 1).includes(Number(e)))) {
+					const option = { variant: [], answer: [] }
+
+					for (const [index, value] of [...variant.toString()].entries()) {
+						const answer = question.answers.at(index)
+
+						option.variant.push({ 'answer_id': answer.id, 'answer': Number(value) })
+						option.answer.push({ 'judgment': answer.text, 'answer': Number(value) })
+					}
+
+					options.push(option)
+				}
+			break
 		case 6:
 			for (let i = 1; i <= parseInt('1'.repeat(question.answers.length), 2); i++) { // перебираю вопросы через "двоичную" систему счисления
 				const option = { variant: [], answer: [] }
