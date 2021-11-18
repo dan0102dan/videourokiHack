@@ -14,7 +14,7 @@ export default (question) => {
 						const answer = question.answers.at(index)
 
 						option.variant.push({ 'answer_id': answer.id, 'answer': Number(value) })
-						option.answer.push({ 'judgment': answer.text, 'answer': Number(value) })
+						option.answer.push({ 'judgment': answer.text, 'answer': JSON.parse(question.annotation).at(Number(value) - 1).text })
 					}
 
 					options.push(option)
