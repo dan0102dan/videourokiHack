@@ -1,7 +1,7 @@
 import { createTest, getOptions, getResults } from './functions/index.js'
 import axios from 'axios'
 
-const id = 6973688
+const id = 8755787
 const user = 'Антон Анатоль'
 const grade = '11'
 
@@ -30,7 +30,7 @@ async function main () {
 
 				const result = await getResults(test.member.uuid)
 				if (result > 0) {
-					console.log('Правильный ответ:', option.answer)
+					console.log('Правильный ответ:', option.answer, '\n')
 					break
 				}
 			}
