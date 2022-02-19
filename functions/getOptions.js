@@ -1,9 +1,9 @@
 export default (question) => {
 	const options = []
 
-	switch (Number(question.type)) { // придумываю все возможные ситуации в зависимости от типа задания
+	switch (Number(question.type)) { // придумываем все возможные ситуации в зависимости от типа задания
 		case 3:
-			console.log('Я пока не умею отвечать на вопросы письменно(\n')
+			console.log('Пока не умею отвечать на вопросы письменно(\n')
 			break
 		case 4:
 			for (let variant = 1; variant <= Number(''.padStart(question.answers.length, JSON.parse(question.annotation).length.toString())); variant++)

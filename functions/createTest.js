@@ -6,7 +6,7 @@ export default async (id, user, grade) => {
 		`https://videouroki.net/tests/api/beginTest/${id}/`,
 		{ 'member': { 'id': false, 'firstname': user.split(' ')[0], 'lastname': user.split(' ')[1], 'classTxt': grade } }
 	)
-	if (test.errors) throw test // если прилетела ошибка
+	if (test.errors) throw test
 
 	let { data: fullTest } = await axios.post(`https://videouroki.net/tests/do/${test.uuid}/`)
 	const $ = cheerio.load(fullTest)
@@ -14,9 +14,7 @@ export default async (id, user, grade) => {
 		try {
 			fullTest = JSON.parse($('body > script').get()[i].children[0].data.replace('window.backend = ', ''))
 		}
-		catch {
-			// console.log('не то')
-		}
+		catch { continue }
 
 	return fullTest
 }
